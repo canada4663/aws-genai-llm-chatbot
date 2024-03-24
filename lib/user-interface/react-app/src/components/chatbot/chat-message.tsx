@@ -71,6 +71,8 @@ export default function ChatMessage(props: ChatMessageProps) {
     props.message.content && props.message.content.length > 0
       ? props.message.content
       : props.message.tokens?.map((v) => v.value).join("");
+  
+  const sessionId: string | undefined = typeof props.message.metadata.sessionId === 'string' ? props.message.metadata.sessionId : undefined;
 
   return (
     <div>
@@ -300,7 +302,24 @@ export default function ChatMessage(props: ChatMessageProps) {
                   setSelectedIcon(0);
                 }}
               />
-            )}
+          )}
+            {sessionId &&
+                <TextContent>
+                  Copy SessionID
+                </TextContent>
+            }
+          {sessionId &&
+          <Button
+                  variant="inline-icon"
+                  iconName="copy"
+                  onClick={() => {
+                    const now = new Date();
+                    const isoDateTime = now.toISOString();
+                    const textToCopy = `Session:${sessionId}|Date-Time:${isoDateTime}`;
+                    navigator.clipboard.writeText(textToCopy);
+                  }}
+          />
+          }
           </div>
         </Container>
       )}
